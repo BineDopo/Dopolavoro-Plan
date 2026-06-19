@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+<title>Arbeitsplan · Restaurant Dopolavoro</title>
+<style>
+:root {
+  --bg:#FAF5F7; --card:#FFF; --h1:#7B3A52; --h2:#A05070; --acc:#C4708A;
+  --wed:#F0E6F0; --thu:#F5E6F0; --fri:#FDF5E0; --sat:#FDE8DC;
+  --sun:#F5EDED; --closed:#EDEDED; --vac:#D8EAF5;
+  --border:#C4708A; --wline:#C4708A; --thick:#A05070;
+  --text:#2A1A20; --muted:#A08090;
+}
+* { box-sizing:border-box; margin:0; padding:0; }
+body { font-family:'Segoe UI',Arial,sans-serif; background:var(--bg); color:var(--text); }
+header { background:linear-gradient(135deg,var(--h1),var(--h2)); color:white; padding:14px 16px 12px; text-align:center; }
+header .sub { font-size:.63rem; letter-spacing:.18em; text-transform:uppercase; opacity:.75; margin-bottom:3px; }
+header h1 { font-size:1.22rem; font-weight:700; }
+header .info { font-size:.7rem; opacity:.8; margin-top:4px; }
+.tabs { display:flex; overflow-x:auto; background:var(--h2); padding:7px 8px; gap:5px; -webkit-overflow-scrolling:touch; scrollbar-width:none; }
+.tabs::-webkit-scrollbar { display:none; }
+.tab-btn { flex-shrink:0; background:rgba(255,255,255,.18); color:white; border:none; border-radius:20px; padding:6px 15px; font-size:.82rem; font-weight:500; cursor:pointer; }
+.tab-btn.active { background:white; color:var(--h2); font-weight:700; }
+.month-pane { padding:10px 8px 6px; }
+.month-title { font-size:1rem; font-weight:700; color:var(--h1); border-left:4px solid var(--acc); padding-left:10px; margin-bottom:9px; }
+table { width:100%; border-collapse:collapse; background:var(--card); border-radius:10px; overflow:hidden; box-shadow:0 2px 10px rgba(100,30,50,.09); table-layout:fixed; font-size:.75rem; }
+thead tr { background:linear-gradient(90deg,var(--h1),var(--h2)); color:white; }
+th { padding:7px 3px; font-size:.68rem; font-weight:600; text-align:center; border-right:2px solid rgba(255,255,255,0.4); }
+th:last-child { border-right:none; }
+th.th-fei  { text-align:left; padding-left:4px; border-right:2px solid rgba(255,255,255,0.7); }
+th.th-thick { border-right:3px solid rgba(255,255,255,0.9); }
+td { padding:5px 3px; border-bottom:1px solid #EDD5DE; border-right:2px solid var(--border); text-align:center; vertical-align:middle; overflow:hidden; }
+td:last-child { border-right:none; }
+td.td-fei  { text-align:left; padding-left:4px; border-right:2px solid var(--acc); }
+td.td-thick { border-right:3px solid var(--thick); }
+tr.week-end td { border-bottom:2.5px solid var(--wline) !important; }
+.row-wed { background:var(--wed); } .row-thu { background:var(--thu); }
+.row-fri { background:var(--fri); } .row-sat { background:var(--sat); }
+.row-sun { background:var(--sun); color:var(--muted); }
+.row-closed { background:var(--closed); color:#bbb; font-style:italic; }
+.row-vac { background:var(--vac); }
+.kw  { font-size:.6rem; color:var(--muted); font-weight:700; }
+.wt  { font-weight:700; font-size:.73rem; }
+.dat { color:#555; font-size:.7rem; }
+.red-circle { display:inline-flex; align-items:center; justify-content:center; background:#E8192C; color:white; border-radius:50%; width:26px; height:26px; font-size:.68rem; font-weight:700; }
+.fei-label { display:block; font-size:.6rem; color:#8B4513; background:#FFF0D8; border-radius:5px; padding:2px 4px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:68px; }
+.badge { display:inline-block; color:white; border-radius:11px; padding:2px 6px; font-size:.65rem; font-weight:600; white-space:nowrap; max-width:100%; overflow:hidden; text-overflow:ellipsis; }
+.badge-special { display:inline-block; background:#ccc; color:white; border-radius:11px; padding:2px 6px; font-size:.63rem; font-style:italic; }
+.legend-section { margin:8px; background:var(--card); border-radius:10px; padding:11px 12px; box-shadow:0 2px 8px rgba(100,30,50,.06); }
+.legend-section h3 { font-size:.67rem; color:var(--muted); text-transform:uppercase; letter-spacing:.1em; margin-bottom:8px; }
+.legend { display:flex; flex-wrap:wrap; gap:7px; }
+.leg-item { display:flex; align-items:center; gap:4px; font-size:.68rem; }
+.leg-box { width:13px; height:13px; border-radius:3px; border:1px solid rgba(0,0,0,.1); flex-shrink:0; }
+.red-leg { display:inline-flex; align-items:center; justify-content:center; background:#E8192C; color:white; border-radius:50%; width:14px; height:14px; font-size:.55rem; font-weight:700; flex-shrink:0; }
+footer { text-align:center; font-size:.63rem; color:var(--muted); padding:12px 10px 22px; }
+</style>
+</head>
+<body>
+<header>
+  <div class="sub">Arbeitsplan 2026</div>
+  <h1>Restaurant Dopolavoro</h1>
+  <div class="info">Mittwoch – Samstag &nbsp;·&nbsp; 17:00 &amp; 18:00 Uhr</div>
+</header>
+<div class="tabs">
+<button class="tab-btn" onclick="showMonth('Juli')" id="btn-Juli">Jul</button>
+<button class="tab-btn" onclick="showMonth('August')" id="btn-August">Aug</button>
+<button class="tab-btn" onclick="showMonth('September')" id="btn-September">Sep</button>
+<button class="tab-btn" onclick="showMonth('Oktober')" id="btn-Oktober">Okt</button>
+<button class="tab-btn" onclick="showMonth('November')" id="btn-November">Nov</button>
+<button class="tab-btn" onclick="showMonth('Dezember')" id="btn-Dezember">Dez</button>
+</div>
+<div id="months">
+<div class="month-pane" id="pane-Juli" style="display:none"><div class="month-title">Juli 2026</div><table><thead><tr><th>KW</th><th>Tag</th><th>Dat.</th><th class="th-fei">Feiertag</th><th class="th-thick">17:00</th><th>18:00</th><th>+</th></tr></thead><tbody>
+<tr class="row-wed"><td class="kw">27</td><td class="wt">Mi</td><td class="dat">01.07.</td><td class="td-fei"></td><td class="td-thick"><span class="badge" style="background:#E0A882">Sabrina</span></td><td><span class="badge" style="background:#BC85AA">Sandra</span></td><td></td></tr>
+<tr class="row-thu"><td></td><td class="wt">Do</td><td class="dat">02.07.</td><td class="td-fei"></td><td class="td-thick"><span class="badge" style="background:#8EC4A4">Anita</span></td><td><span class="badge" style="background:#E0A882">Sabrina</span></td><td></td></tr>
+<tr class="row-fri"><td></td><td><span class="red-circle">Fr</span></td><td><span class="red-circle">03.07.</span></td><td class="td-fei"></td><td class="td-thick"><span class="badge" style="background:#E0A882">Sabrina</span></td><td><span class="badge" style="background:#A99BC8">Bawa</span></td><td><span class="badge" style="background:#D496B8">Samara</span></td></tr>
+<tr class="row-sat"><td></td><td><span class="red-circle">Sa</span></td><td><span class="red-circle">04.07.</span></td><td class="td-fei"></td><td class="td-thick"><span class="badge" style="background:#96BC86">Jasmin</span></td><td><span class="badge" style="background:#BC85AA">Sandra</span></td><td><span class="badge" style="background:#E0A882">Sabrina</span></td></tr>
+<tr class="row-closed week-end"><td></td><td><span class="red-circle">So</span></td><td><span class="red-circle">05.07.</span></td><td class="td-fei"></td><td class="td-thick"><span class="badge badge-special">geschlossen</span></td><td></td><td></td></tr>
+<tr class="row-closed"><td class="kw">28</td><td class="wt">Mo</td><td class="dat">06.07.</td><td class="td-fei"></td><td class="td-thick"><span class="badge badge-special">geschlossen</span></td><td></td><td></td></tr>
+<tr class="row-closed"><td></td><td class="wt">Di</td><td class="dat">07.07.</td><td class="td-fei"></td><td class="td-thick"><span class="badge badge-special">geschlossen</span></td><td></td><td></td></tr>
+<tr class="row-wed"><td></td><td><span class="red-circle">Mi</span></td><td><span class="red-circle">08.07.</span></td><td class="td-fei"></td><td class="td-thick"><span class="badge" style="background:#D4889A">Yvonne</span></td><td><span class="badge" style="background:#A99BC8">Bawa</span></td><td><span class="badge" style="background:#BC85AA">Sandra</span></td></tr>
+<tr class="row-thu"><td></td><td><span class="red-circle">Do</span></td><td><span class="red-circle">09.07.</span></td><td class="td-fei"></td><td class="td-thick"><span class="badge" style="background:#E0A882">Sabrina</span></td><td><span class="badge" style="background:#8EC4A4">Anita</span></td><td><span class="badge" style="background:#8EC0D4">Anja</span></td></tr>
+<tr class="row-fri"><td></td><td><span class="red-circle">Fr</span></td><td><span class="red-circle">10.07.</span></td><td class="td-fei"></td><td class="td-thick"><span class="badge" style="background:#D4728A">Sabine</span></td><td><span class="badge" style="background:#96BC86">Jasmin</span></td><td><span class="badge" style="background:#8EC4A4">Anita</span></td></tr>
+<tr class="row-sat"><td></td><td><span class="red-circle">Sa</span></td><td><span class="red-circle">11.07.</span></td><td class="td-fei"></td><td class="td-thick"><span class="badge" style="background:#BC85AA">Sandra</span></td><td><span class="badge" style="background:#D4728A">Sabine</span></td><td><span class="badge" style="background:#8EC4A4">Anita</span></td></tr>
+<tr class="row-closed week-end"><td></td><td class="wt">So</td><td class="dat">12.07.</td><td class="td-fei"></td><td class="td-thick"><span class="badge badge-special">geschlossen</span></td><td></td><td></td></tr>
+<tr class="row-closed"><td class="kw">29</td><td><span class="red-circle">Mo</span></td><td><span class="red-circle">13.07.</span></td><td class="td-fei"></td><td class="td-thick"><span class="badge badge-special">geschlossen</span></td><td></td><td></td></tr>
+<tr class="row-closed"><td></td><td><span class="red-circle">Di</span></td><td><span class="red-circle">14.07.</span></td><td class="td-fei"></td><td class="td-thick"><span class="badge badge-special">geschlossen</span></td><td></td><td></td></tr>
+<tr class="row-wed"><td></td><td class="wt">Mi</td><td class="dat">15.07.</td><td class="td-fei"></td><td class="td-thick"><span class="badge" style="background:#D4889A">Yvonne</span></td><td><span class="badge" style="background:#A99BC8">Bawa</span></td><td></td></tr>
+<tr class="row-thu"><td></td><td class="wt">Do</td><td class="dat">16.07.</td><td class="td-fei"></td><td class="td-thick"></td><td><span class="badge" style="background:#8EC4A4">Anita</span></td><td></td></tr>
+<tr class="row-fri"><td></td><td class="wt">Fr</td><td class="dat">17.07.</td><td class="td-fei"></td><td class="td-thick"><span class="badge" style="background:#96BC86">Jasmin</span></td><td><span class="badge" style="background:#D4728A">Sabine</span></td><td></td></tr>
+<tr class="row-sat"><td></td><td class="wt">Sa</td><td class="dat">18.07.</td><td class="td-fei"></td><td class="td-thick"><span class="badge" style="background:#8EC4A4">Anita</span></td><td><span class="badge" style="background:#96BC86">Jasmin</span></td><td></td></tr>
+<tr class="row-closed week-end"><td></td><td class="wt">So</td><td class="dat">19.07.</td><td class="td-fei"></td><td class="td-thick"><span class="badge badge-special">geschlossen</span></td><td></td><td></td></tr>
+<tr class="row-closed"><td class="kw">30</td><td class="wt">Mo</td><td class="dat">20.07.</td><td class="td-fei"></td><td class="td-thick"><span class="badge badge-special">geschlossen</span></td><td></td><td></td></tr>
+<tr class="row-closed"><td></td><td class="wt">Di</td><td class="dat">21.07.</td><td class="td-fei"></td><td class="td-thick"><span class="badge badge-special">geschlossen</span></td><td></td><td></td></tr>
+<tr class="row-wed"><td></td><td><span class="red-circle">Mi</span></td><td><span class="red-circle">22.07.</span></td><td class="td-fei"></td><td class="td-thick"><span class="badge" style="background:#D4889A">Yvonne</span></td><td><span class="badge" style="background:#96BC86">Jasmin</span></td><td><span class="badge" style="background:#E0A882">Sabrina</span></td></tr>
+<tr class="row-thu"><td></td><td><span class="red-circle">Do</span></td><td><span class="red-circle">23.07.</span></td><td class="td-fei"></td><td class="td-thick"><span class="badge" style="background:#E0A882">Sabrina</span></td><td><span class="badge" style="background:#A99BC8">Bawa</span></td><td></td></tr>
+<tr class="row-fri"><td></td><td><span class="red-circle">Fr</span></td><td><span class="red-circle">24.07.</span></td><td class="td-fei"></td><td class="td-thick"><span class="badge" style="background:#96BC86">Jasmin</span></td><td><span class="badge" style="background:#B0B0B0">Sabine/Anja</span></td><td><span class="badge" style="background:#C9AA6A">Martha</span></td></tr>
+<tr class="row-sat"><td></td><td class="wt">Sa</td><td class="dat">25.07.</td><td class="td-fei"></td><td class="td-thick"><span class="badge" style="background:#96BC86">Jasmin</span></td><td><span class="badge" style="background:#C9AA6A">Martha</span></td><td></td></tr>
+<tr class="row-closed week-end"><td></td><td class="wt">So</td><td class="dat">26.07.</td><td class="td-fei"></td><td class="td-thick"><span class="badge badge-special">geschlossen</span></td><td></td><td></td></tr>
+<tr class="row-closed"><td class="kw">31</td><td class="wt">Mo</td><td class="dat">27.07.</td><td class="td-fei"></td><td class="td-thick"><span class="badge badge-special">geschlossen</span></td><td></td><td></td></tr>
+<tr class="row-closed"><td></td><td><span class="red-circle">Di</span></td><td><span class="red-circle">28.07.</span></td><td class="td-fei"></td><td class="td-thick"><span class="badge badge-special">geschlossen</span></td><td></td><td></td></tr>
+<tr class="row-wed"><td></td><td><span class="red-circle">Mi</span></td><td><span class="red-circle">29.07.</span></td><td class="td-fei"></td><td class="td-thick"><span class="badge" style="background:#D4889A">Yvonne</span></td><td><span class="badge" style="background:#E0A882">Sabrina</span></td><td><span class="badge" style="background:#BC85AA">Sandra</span></td></tr>
+<tr class="row-thu"><td></td><td><span class="red-circle">Do</span></td><td><span class="red-circle">30.07.</span></td><td class="td-fei"></td><td class="td-thick"><span class="badge" style="background:#E0A882">Sabrina</span></td><td><span class="badge" style="background:#A99BC8">Bawa</span></td><td></td></tr>
+<tr class="row-fri"><td></td><td><span class="red-circle">Fr</span></td><td><span class="red-circle">31.07.</span></td><td class="td-fei"></td><td class="td-thick"><span class="badge" style="background:#A99BC8">Bawa</span></td><td><span class="badge" style="background:#D4728A">Sabine</span></td><td><span class="badge" style="background:#E0A882">Sabrina</span></td></tr>
+</tbody></table>
+</div>
+<div class="month-pane" id="pane-August" style="display:none"><div class="month-title">August 2026</div><table><thead><tr><th>KW</th><th>Tag</th><th>Dat.</th><th class="th-fei">Feiertag</th><th class="th-thick">17:00</th><th>18:00</th><th>+</th></tr></thead><tbody>
+<tr class="row-sat"><td class="kw">31</td><td class="wt">Sa</td><td class="dat">01.08.</td><td class="td-fei"></td><td class="td-thick"><span class="badge" style="background:#D4728A">Sabine</span></td><td><span class="badge" style="background:#BC85AA">Sandra</span></td><td></td></tr>
+<tr class="row-closed week-end"><td></td><td class="wt">So</td><td class="dat">02.08.</td><td class="td-fei"></td><td class="td-thick"><span class="badge badge-special">geschlossen</span></td><td></td><td></td></tr>
+<tr class="row-closed"><td class="kw">32</td><td class="wt">Mo</td><td class="dat">03.08.</td><td class="td-fei"></td><td class="td-thick"><span class="badge badge-special">geschlossen</span></td><td></td><td></td></tr>
+<tr class="row-closed"><td></td><td><span class="red-circle">Di</span></td><td><span class="red-circle">04.08.</span></td><td class="td-fei"></td><td class="td-thick"><span class="badge badge-special">geschlossen</span></td><td></td><td></td></tr>
+<tr class="row-wed"><td></td><td><span class="red-circle">Mi</span></td><td><span class="red-circle">05.08.</span></td><td class="td-fei"></td><td class="td-thick"><span class="badge" style="background:#D4889A">Yvonne</span></td><td><span class="badge" style="background:#A99BC8">Bawa</span></td><td><span class="badge" style="background:#BC85AA">Sandra</span></td></tr>
+<tr class="row-thu"><td></td><td><span class="red-circle">Do</span></td><td><span class="red-circle">06.08.</span></td><td class="td-fei"></td><td class="td-thick"><span class="badge" style="background:#E0A882">Sabrina</span></td><td><span class="badge" style="background:#8EC4A4">Anita</span></td><td><span class="badge" style="background:#8EC4A4">Anita</span></td></tr>
+<tr class="row-fri"><td></td><td><span class="red-circle">Fr</span></td><td><span class="red-circle">07.08.</span></td><td class="td-fei"></td><td class="td-thick"><span class="badge" style="background:#BC85AA">Sandra</span></td><td><span class="badge" style="background:#D4728A">Sabine</span></td><td><span class="badge" style="background:#E0A882">Sabrina</span></td></tr>
+<tr class="row-vac"><td></td><td class="wt">Sa</td><td class="dat">08.08.</td><td class="td-fei"></td><td class="td-thick"><span class="badge badge-special">URLAUB</span></td><td></td><td></td></tr>
+<tr class="row-vac week-end"><td></td><td class="wt">So</td><td class="dat">09.08.</td><td class="td-fei"></td><td class="td-thick"><span class="badge badge-special">URLAUB</span></td><td></td><td></td></tr>
+<tr class="row-vac"><td class="kw">33</td><td class="wt">Mo</td><td class="dat">10.08.</td><td class="td-fei"></td><td class="td-thick"><span class="badge badge-special">URLAUB</span></td><td></td><td></td></tr>
+<tr class="row-vac"><td></td><td class="wt">Di</td><td class="dat">11.08.</td><td class="td-fei"></td><td class="td-thick"><span class="badge badge-special">URLAUB</span></td><td></td><td></td></tr>
+<tr class="row-vac"><td></td><td class="wt">Mi</td><td class="dat">12.08.</td><td class="td-fei"></td><td class="td-thick"><span class="badge badge-special">URLAUB</span></td><td></td><td></td></tr>
+<tr class="row-vac"><td></td><td class="wt">Do</td><td class="dat">13.08.</td><td class="td-fei"></td><td class="td-thick"><span class="badge badge-special">URLAUB</span></td><td></td><td></td></tr>
+<tr class="row-vac"><td></td><td class="wt">Fr</td><td class="dat">14.08.</td><td class="td-fei"></td><td class="td-thick"><span class="badge badge-special">URLAUB</span></td><td></td><td></td></tr>
+<tr class="row-vac"><td></td><td class="wt">Sa</td><td class="dat">15.08.</td><td class="td-fei"><span class="fei-label" title="Mariä Himmelfahrt">Mariä Himme…</span></td><td class="td-thick"><span class="badge badge-special">URLAUB</span></td><td></td><td></td></tr>
+<tr class="row-vac week-end"><td></td><td class="wt">So</td><td class="dat">16.08.</td><td class="td-fei"></td><td class="td-thick"><span class="badge badge-special">URLAUB</span></td><td></td><td></td></tr>
+<tr class="row-vac"><td class="kw">34</td><td class="wt">Mo</td><td class="dat">17.08.</td><td class="td-fei"></td><td class="td-thick"><span class="badge badge-special">URLAUB</span></td><td></td><td></td></tr>
+<tr class="row-vac"><td></td><td class="wt">Di</td><td class="dat">18.08.</td><td class="td-fei"></td><td class="td-thick"><span class="badge badge-special">URLAUB</span></td><td></td><td></td></tr>
+<tr class="row-vac"><td></td><td class="wt">Mi</td><td class="dat">19.08.</td><td class="td-fei"></td><td class="td-thick"><span class="badge badge-special">URLAUB</span></td><td></td><td></td></tr>
+<tr class="row-vac"><td></td><td class="wt">Do</td><td class="dat">20.08.</td><td class="td-fei"></td><td class="td-thick"><span class="badge badge-special">URLAUB</span></td><td></td><td></td></tr>
+<tr class="row-vac"><td></td><td class="wt">Fr</td><td class="dat">21.08.</td><td class="td-fei"></td><td class="td-thick"><span class="badge badge-special">URLAUB</span></td><td></td><td></td></tr>
+<tr class="row-vac"><td></td><td class="wt">Sa</td><td class="dat">22.08.</td><td class="td-fei"></td><td class="td-thick"><span class="badge badge-special">URLAUB</span></td><td></td><td></td></tr>
+<tr class="row-vac week-end"><td></td><td class="wt">So</td><td class="dat">23.08.</td><td class="td-fei"></td><td class="td-thick"><span class="badge badge-special">URLAUB</span></td><td></td><td></td></tr>
+<tr class="row-vac"><td class="kw">35</td><td class="wt">Mo</td><td class="dat">24.08.</td><td class="td-fei"></td><td class="td-thick"><span class="badge badge-special">URLAUB</span></td><td></td><td></td></tr>
+<tr class="row-vac"><td></td><td class="wt">Di</td><td class="dat">25.08.</td><td class="td-fei"></td><td class="td-thick"><span class="badge badge-special">URLAUB</span></td><td></td><td></td></tr>
+<tr class="row-vac"><td></td><td class="wt">Mi</td><td class="dat">26.08.</td><td class="td-fei"></td><td class="td-thick"><span class="badge badge-special">URLAUB</span></td><td></td><td></td></tr>
+<tr class="row-vac"><td></td><td class="wt">Do</td><td class="dat">27.08.</td><td class="td-fei"></td><td class="td-thick"><span class="badge badge-special">URLAUB</span></td><td></td><td></td></tr>
+<tr class="row-vac"><td></td><td class="wt">Fr</td><td class="dat">28.08.</td><td class="td-fei"></td><td class="td-thick"><span class="badge badge-special">URLAUB</span></td><td></td><td></td></tr>
+<tr class="row-vac"><td></td><td class="wt">Sa</td><td class="dat">29.08.</td><td class="td-fei"></td><td class="td-thick"><span class="badge badge-special">URLAUB</span></td><td></td><td></td></tr>
+<tr class="row-vac week-end"><td></td><td class="wt">So</td><td class="dat">30.08.</td><td class="td-fei"></td><td class="td-thick"><span class="badge badge-special">URLAUB</span></td><td></td><td></td></tr>
+<tr class="row-vac"><td class="kw">36</td><td class="wt">Mo</td><td class="dat">31.08.</td><td class="td-fei"></td><td class="td-thick"><span class="badge badge-special">URLAUB</span></td><td></td><td></td></tr>
+</tbody></table>
+</div>
+<div class="month-pane" id="pane-September" style="display:none"><div class="month-title">September 2026</div><table><thead><tr><th>KW</th><th>Tag</th><th>Dat.</th><th class="th-fei">Feiertag</th><th class="th-thick">17:00</th><th>18:00</th></tr></thead><tbody>
+<tr class="row-vac"><td class="kw">36</td><td class="wt">Di</td><td class="dat">01.09.</td><td class="td-fei"></td><td class="td-thick"><span class="badge badge-special">URLAUB</span></td><td></td></tr>
+<tr class="row-vac"><td></td><td class="wt">Mi</td><td class="dat">02.09.</td><td class="td-fei"></td><td class="td-thick"><span class="badge badge-special">URLAUB</span></td><td></td></tr>
+<tr class="row-vac"><td></td><td class="wt">Do</td><td class="dat">03.09.</td><td class="td-fei"></td><td class="td-thick"><span class="badge badge-special">URLAUB</span></td><td></td></tr>
+<tr class="row-vac"><td></td><td class="wt">Fr</td><td class="dat">04.09.</td><td class="td-fei"></td><td class="td-thick"><span class="badge badge-special">URLAUB</span></td><td></td></tr>
+<tr class="row-vac"><td></td><td class="wt">Sa</td><td class="dat">05.09.</td><td class="td-fei"></td><td class="td-thick"><span class="badge badge-special">URLAUB</span></td><td></td></tr>
+<tr class="row-vac week-end"><td></td><td class="wt">So</td><td class="dat">06.09.</td><td class="td-fei"></td><td class="td-thick"><span class="badge badge-special">URLAUB</span></td><td></td></tr>
+<tr class="row-closed"><td class="kw">37</td><td class="wt">Mo</td><td class="dat">07.09.</td><td class="td-fei"></td><td class="td-thick"><span class="badge badge-special">geschlossen</span></td><td></td></tr>
+<tr class="row-closed"><td></td><td class="wt">Di</td><td class="dat">08.09.</td><td class="td-fei"></td><td class="td-thick"><span class="badge badge-special">geschlossen</span></td><td></td></tr>
+<tr class="row-wed"><td></td><td class="wt">Mi</td><td class="dat">09.09.</td><td class="td-fei"></td><td class="td-thick"><span class="badge" style="background:#D4889A">Yvonne</span></td><td><span class="badge" style="background:#A99BC8">Bawa</span></td></tr>
+<tr class="row-thu"><td></td><td class="wt">Do</td><td class="dat">10.09.</td><td class="td-fei"></td><td class="td-thick"><span class="badge" style="background:#E0A882">Sabrina</span></td><td><span class="badge" style="background:#8EC4A4">Anita</span></td></tr>
+<tr class="row-fri"><td></td><td class="wt">Fr</td><td class="dat">11.09.</td><td class="td-fei"></td><td class="td-thick"><span class="badge" style="background:#8EC0D4">Anja</span></td><td><span class="badge" style="background:#D4728A">Sabine</span></td></tr>
+<tr class="row-sat"><td></td><td class="wt">Sa</td><td class="dat">12.09.</td><td class="td-fei"></td><td class="td-thick"><span class="badge" style="background:#D4728A">Sabine</span></td><td><span class="badge" style="background:#BC85AA">Sandra</span></td></tr>
+<tr class="row-closed week-end"><td></td><td class="wt">So</td><td class="dat">13.09.</td><td class="td-fei"></td><td class="td-thick"><span class="badge badge-special">geschlossen</span></td><td></td></tr>
+<tr class="row-closed"><td class="kw">38</td><td class="wt">Mo</td><td class="dat">14.09.</td><td class="td-fei"></td><td class="td-thick"><span class="badge badge-special">geschlossen</span></td><td></td></tr>
+<tr class="row-closed"><td></td><td class="wt">Di</td><td class="dat">15.09.</td><td class="td-fei"></td><td class="td-thick"><span class="badge badge-special">geschlossen</span></td><td></td></tr>
+<tr class="row-wed"><td></td><td class="wt">Mi</td><td class="dat">16.09.</td><td class="td-fei"></td><td class="td-thick"><span class="badge" style="background:#D4889A">Yvonne</span></td><td><span class="badge" style="background:#A99BC8">Bawa</span></td></tr>
+<tr class="row-thu"><td></td><td class="wt">Do</td><td class="dat">17.09.</td><td class="td-fei"></td><td class="td-thick"><span class="badge" style="background:#E0A882">Sabrina</span></td><td><span class="badge" style="background:#8EC4A4">Anita</span></td></tr>
+<tr class="row-fri"><td></td><td class="wt">Fr</td><td class="dat">18.09.</td><td class="td-fei"></td><td class="td-thick"><span class="badge" style="background:#C9AA6A">Martha</span></td><td><span class="badge" style="background:#D4728A">Sabine</span></td></tr>
+<tr class="row-sat"><td></td><td class="wt">Sa</td><td class="dat">19.09.</td><td class="td-fei"></td><td class="td-thick"><span class="badge" style="background:#BC85AA">Sandra</span></td><td><span class="badge" style="background:#C9AA6A">Martha</span></td></tr>
+<tr class="row-closed week-end"><td></td><td class="wt">So</td><td class="dat">20.09.</td><td class="td-fei"></td><td class="td-thick"><span class="badge badge-special">geschlossen</span></td><td></td></tr>
+<tr class="row-closed"><td class="kw">39</td><td class="wt">Mo</td><td class="dat">21.09.</td><td class="td-fei"></td><td class="td-thick"><span class="badge badge-special">geschlossen</span></td><td></td></tr>
+<tr class="row-closed"><td></td><td class="wt">Di</td><td class="dat">22.09.</td><td class="td-fei"></td><td class="td-thick"><span class="badge badge-special">geschlossen</span></td><td></td></tr>
+<tr class="row-wed"><td></td><td class="wt">Mi</td><td class="dat">23.09.</td><td class="td-fei"></td><td class="td-thick"><span class="badge" style="background:#D4889A">Yvonne</span></td><td><span class="badge" style="background:#A99BC8">Bawa</span></td></tr>
+<tr class="row-thu"><td></td><td class="wt">Do</td><td class="dat">24.09.</td><td class="td-fei"></td><td class="td-thick"><span class="badge" style="background:#E0A882">Sabrina</span></td><td><span class="badge" style="background:#8EC4A4">Anita</span></td></tr>
+<tr class="row-fri"><td></td><td class="wt">Fr</td><td class="dat">25.09.</td><td class="td-fei"></td><td class="td-thick"><span class="badge" style="background:#D4728A">Sabine</span></td><td><span class="badge" style="background:#A99BC8">Bawa</span></td></tr>
+<tr class="row-sat"><td></td><td class="wt">Sa</td><td class="dat">26.09.</td><td class="td-fei"></td><td class="td-thick"><span class="badge" style="background:#D4728A">Sabine</span></td><td><span class="badge" style="background:#8EC0D4">Anja</span></td></tr>
+<tr class="row-closed week-end"><td></td><td class="wt">So</td><td class="dat">27.09.</td><td class="td-fei"></td><td class="td-thick"><span class="badge badge-special">geschlossen</span></td><td></td></tr>
+<tr class="row-closed"><td class="kw">40</td><td class="wt">Mo</td><td class="dat">28.09.</td><td class="td-fei"></td><td class="td-thick"><span class="badge badge-special">geschlossen</span></td><td></td></tr>
+<tr class="row-closed"><td></td><td class="wt">Di</td><td class="dat">29.09.</td><td class="td-fei"></td><td class="td-thick"><span class="badge badge-special">geschlossen</span></td><td></td></tr>
+<tr class="row-wed"><td></td><td class="wt">Mi</td><td class="dat">30.09.</td><td class="td-fei"></td><td class="td-thick"><span class="badge" style="background:#D4889A">Yvonne</span></td><td><span class="badge" style="background:#A99BC8">Bawa</span></td></tr>
+</tbody></table>
+</div>
+<div class="month-pane" id="pane-Oktober" style="display:none"><div class="month-title">Oktober 2026</div><table><thead><tr><th>KW</th><th>Tag</th><th>Dat.</th><th class="th-fei">Feiertag</th><th class="th-thick">17:00</th><th>18:00</th></tr></thead><tbody>
+<tr class="row-thu"><td class="kw">40</td><td class="wt">Do</td><td class="dat">01.10.</td><td class="td-fei"></td><td class="td-thick"><span class="badge" style="background:#E0A882">Sabrina</span></td><td><span class="badge" style="background:#8EC4A4">Anita</span></td></tr>
+<tr class="row-fri"><td></td><td class="wt">Fr</td><td class="dat">02.10.</td><td class="td-fei"></td><td class="td-thick"><span class="badge" style="background:#C9AA6A">Martha</span></td><td><span class="badge" style="background:#8EC0D4">Anja</span></td></tr>
+<tr class="row-sat"><td></td><td class="wt">Sa</td><td class="dat">03.10.</td><td class="td-fei"></td><td class="td-thick"><span class="badge" style="background:#D4728A">Sabine</span></td><td><span class="badge" style="background:#C9AA6A">Martha</span></td></tr>
+<tr class="row-closed week-end"><td></td><td class="wt">So</td><td class="dat">04.10.</td><td class="td-fei"></td><td class="td-thick"><span class="badge badge-special">geschlossen</span></td><td></td></tr>
+<tr class="row-closed"><td class="kw">41</td><td class="wt">Mo</td><td class="dat">05.10.</td><td class="td-fei"></td><td class="td-thick"><span class="badge badge-special">geschlossen</span></td><td></td></tr>
+<tr class="row-closed"><td></td><td class="wt">Di</td><td class="dat">06.10.</td><td class="td-fei"></td><td class="td-thick"><span class="badge badge-special">geschlossen</span></td><td></td></tr>
+<tr class="row-wed"><td></td><td class="wt">Mi</td><td class="dat">07.10.</td><td class="td-fei"></td><td class="td-thick"><span class="badge" style="background:#D4889A">Yvonne</span></td><td><span class="badge" style="background:#A99BC8">Bawa</span></td></tr>
+<tr class="row-thu"><td></td><td class="wt">Do</td><td class="dat">08.10.</td><td class="td-fei"></td><td class="td-thick"><span class="badge" style="background:#E0A882">Sabrina</span></td><td><span class="badge" style="background:#8EC4A4">Anita</span></td></tr>
+<tr class="row-fri"><td></td><td class="wt">Fr</td><td class="dat">09.10.</td><td class="td-fei"></td><td class="td-thick"><span class="badge" style="background:#E0A882">Sabrina</span></td><td><span class="badge" style="background:#D4728A">Sabine</span></td></tr>
+<tr class="row-sat"><td></td><td class="wt">Sa</td><td class="dat">10.10.</td><td class="td-fei"></td><td class="td-thick"><span class="badge" style="background:#BC85AA">Sandra</span></td><td><span class="badge" style="background:#D4728A">Sabine</span></td></tr>
+<tr class="row-closed week-end"><td></td><td class="wt">So</td><td class="dat">11.10.</td><td class="td-fei"></td><td class="td-thick"><span class="badge badge-special">geschlossen</span></td><td></td></tr>
+<tr class="row-closed"><td class="kw">42</td><td class="wt">Mo</td><td class="dat">12.10.</td><td class="td-fei"></td><td class="td-thick"><span class="badge badge-special">geschlossen</span></td><td></td></tr>
+<tr class="row-closed"><td></td><td class="wt">Di</td><td class="dat">13.10.</td><td class="td-fei"></td><td class="td-thick"><span class="badge badge-special">geschlossen</span></td><td></td></tr>
+<tr class="row-wed"><td></td><td class="wt">Mi</td><td class="dat">14.10.</td><td class="td-fei"></td><td class="td-thick"><span class="badge" style="background:#D4889A">Yvonne</span></td><td><span class="badge" style="background:#A99BC8">Bawa</span></td></tr>
+<tr class="row-thu"><td></td><td class="wt">Do</td><td class="dat">15.10.</td><td class="td-fei"></td><td class="td-thick"><span class="badge" style="background:#E0A882">Sabrina</span></td><td><span class="badge" style="background:#8EC4A4">Anita</span></td></tr>
+<tr class="row-fri"><td></td><td class="wt">Fr</td><td class="dat">16.10.</td><td class="td-fei"></td><td class="td-thick"><span class="badge" style="background:#D4728A">Sabine</span></td><td><span class="badge" style="background:#8EC4A4">Anita</span></td></tr>
+<tr class="row-sat"><td></td><td class="wt">Sa</td><td class="dat">17.10.</td><td class="td-fei"></td><td class="td-thick"><span class="badge" style="background:#8EC0D4">Anja</span></td><td><span class="badge" style="background:#C9AA6A">Martha</span></td></tr>
+<tr class="row-closed week-end"><td></td><td class="wt">So</td><td class="dat">18.10.</td><td class="td-fei"></td><td class="td-thick"><span class="badge badge-special">geschlossen</span></td><td></td></tr>
+<tr class="row-closed"><td class="kw">43</td><td class="wt">Mo</td><td class="dat">19.10.</td><td class="td-fei"></td><td class="td-thick"><span class="badge badge-special">geschlossen</span></td><td></td></tr>
+<tr class="row-closed"><td></td><td class="wt">Di</td><td class="dat">20.10.</td><td class="td-fei"></td><td class="td-thick"><span class="badge badge-special">geschlossen</span></td><td></td></tr>
+<tr class="row-wed"><td></td><td class="wt">Mi</td><td class="dat">21.10.</td><td class="td-fei"></td><td class="td-thick"><span class="badge" style="background:#D4889A">Yvonne</span></td><td><span class="badge" style="background:#A99BC8">Bawa</span></td></tr>
+<tr class="row-thu"><td></td><td class="wt">Do</td><td class="dat">22.10.</td><td class="td-fei"></td><td class="td-thick"><span class="badge" style="background:#E0A882">Sabrina</span></td><td><span class="badge" style="background:#8EC4A4">Anita</span></td></tr>
+<tr class="row-fri"><td></td><td class="wt">Fr</td><td class="dat">23.10.</td><td class="td-fei"></td><td class="td-thick"><span class="badge" style="background:#E0A882">Sabrina</span></td><td><span class="badge" style="background:#D4728A">Sabine</span></td></tr>
+<tr class="row-sat"><td></td><td class="wt">Sa</td><td class="dat">24.10.</td><td class="td-fei"></td><td class="td-thick"><span class="badge" style="background:#D4728A">Sabine</span></td><td><span class="badge" style="background:#BC85AA">Sandra</span></td></tr>
+<tr class="row-closed week-end"><td></td><td class="wt">So</td><td class="dat">25.10.</td><td class="td-fei"></td><td class="td-thick"><span class="badge badge-special">geschlossen</span></td><td></td></tr>
+<tr class="row-closed"><td class="kw">44</td><td class="wt">Mo</td><td class="dat">26.10.</td><td class="td-fei"><span class="fei-label" title="Nationalfeiertag">Nationalfei…</span></td><td class="td-thick"><span class="badge badge-special">geschlossen</span></td><td></td></tr>
+<tr class="row-closed"><td></td><td class="wt">Di</td><td class="dat">27.10.</td><td class="td-fei"></td><td class="td-thick"><span class="badge badge-special">geschlossen</span></td><td></td></tr>
+<tr class="row-wed"><td></td><td class="wt">Mi</td><td class="dat">28.10.</td><td class="td-fei"></td><td class="td-thick"><span class="badge" style="background:#D4889A">Yvonne</span></td><td><span class="badge" style="background:#A99BC8">Bawa</span></td></tr>
+<tr class="row-thu"><td></td><td class="wt">Do</td><td class="dat">29.10.</td><td class="td-fei"></td><td class="td-thick"><span class="badge" style="background:#E0A882">Sabrina</span></td><td><span class="badge" style="background:#8EC4A4">Anita</span></td></tr>
+<tr class="row-fri"><td></td><td class="wt">Fr</td><td class="dat">30.10.</td><td class="td-fei"></td><td class="td-thick"><span class="badge" style="background:#BC85AA">Sandra</span></td><td><span class="badge" style="background:#D4728A">Sabine</span></td></tr>
+<tr class="row-sat"><td></td><td class="wt">Sa</td><td class="dat">31.10.</td><td class="td-fei"></td><td class="td-thick"><span class="badge" style="background:#C9AA6A">Martha</span></td><td><span class="badge" style="background:#D4728A">Sabine</span></td></tr>
+</tbody></table>
+</div>
+<div class="month-pane" id="pane-November" style="display:none"><div class="month-title">November 2026</div><table><thead><tr><th>KW</th><th>Tag</th><th>Dat.</th><th class="th-fei">Feiertag</th><th class="th-thick">17:00</th><th>18:00</th></tr></thead><tbody>
+<tr class="row-closed week-end"><td class="kw">44</td><td class="wt">So</td><td class="dat">01.11.</td><td class="td-fei"><span class="fei-label" title="Allerheiligen">Allerheilig…</span></td><td class="td-thick"><span class="badge badge-special">geschlossen</span></td><td></td></tr>
+<tr class="row-closed"><td class="kw">45</td><td class="wt">Mo</td><td class="dat">02.11.</td><td class="td-fei"></td><td class="td-thick"><span class="badge badge-special">geschlossen</span></td><td></td></tr>
+<tr class="row-closed"><td></td><td class="wt">Di</td><td class="dat">03.11.</td><td class="td-fei"></td><td class="td-thick"><span class="badge badge-special">geschlossen</span></td><td></td></tr>
+<tr class="row-wed"><td></td><td class="wt">Mi</td><td class="dat">04.11.</td><td class="td-fei"></td><td class="td-thick"><span class="badge" style="background:#D4889A">Yvonne</span></td><td><span class="badge" style="background:#A99BC8">Bawa</span></td></tr>
+<tr class="row-thu"><td></td><td class="wt">Do</td><td class="dat">05.11.</td><td class="td-fei"></td><td class="td-thick"><span class="badge" style="background:#E0A882">Sabrina</span></td><td><span class="badge" style="background:#8EC4A4">Anita</span></td></tr>
+<tr class="row-fri"><td></td><td class="wt">Fr</td><td class="dat">06.11.</td><td class="td-fei"></td><td class="td-thick"><span class="badge" style="background:#D4728A">Sabine</span></td><td><span class="badge" style="background:#8EC0D4">Anja</span></td></tr>
+<tr class="row-sat"><td></td><td class="wt">Sa</td><td class="dat">07.11.</td><td class="td-fei"></td><td class="td-thick"><span class="badge" style="background:#BC85AA">Sandra</span></td><td><span class="badge" style="background:#D4728A">Sabine</span></td></tr>
+<tr class="row-closed week-end"><td></td><td class="wt">So</td><td class="dat">08.11.</td><td class="td-fei"></td><td class="td-thick"><span class="badge badge-special">geschlossen</span></td><td></td></tr>
+<tr class="row-closed"><td class="kw">46</td><td class="wt">Mo</td><td class="dat">09.11.</td><td class="td-fei"></td><td class="td-thick"><span class="badge badge-special">geschlossen</span></td><td></td></tr>
+<tr class="row-closed"><td></td><td class="wt">Di</td><td class="dat">10.11.</td><td class="td-fei"></td><td class="td-thick"><span class="badge badge-special">geschlossen</span></td><td></td></tr>
+<tr class="row-wed"><td></td><td class="wt">Mi</td><td class="dat">11.11.</td><td class="td-fei"></td><td class="td-thick"><span class="badge" style="background:#D4889A">Yvonne</span></td><td><span class="badge" style="background:#A99BC8">Bawa</span></td></tr>
+<tr class="row-thu"><td></td><td class="wt">Do</td><td class="dat">12.11.</td><td class="td-fei"></td><td class="td-thick"><span class="badge" style="background:#E0A882">Sabrina</span></td><td><span class="badge" style="background:#8EC4A4">Anita</span></td></tr>
+<tr class="row-fri"><td></td><td class="wt">Fr</td><td class="dat">13.11.</td><td class="td-fei"></td><td class="td-thick"><span class="badge" style="background:#C9AA6A">Martha</span></td><td><span class="badge" style="background:#BC85AA">Sandra</span></td></tr>
+<tr class="row-sat"><td></td><td class="wt">Sa</td><td class="dat">14.11.</td><td class="td-fei"></td><td class="td-thick"><span class="badge" style="background:#D4728A">Sabine</span></td><td><span class="badge" style="background:#C9AA6A">Martha</span></td></tr>
+<tr class="row-closed week-end"><td></td><td class="wt">So</td><td class="dat">15.11.</td><td class="td-fei"></td><td class="td-thick"><span class="badge badge-special">geschlossen</span></td><td></td></tr>
+<tr class="row-closed"><td class="kw">47</td><td class="wt">Mo</td><td class="dat">16.11.</td><td class="td-fei"></td><td class="td-thick"><span class="badge badge-special">geschlossen</span></td><td></td></tr>
+<tr class="row-closed"><td></td><td class="wt">Di</td><td class="dat">17.11.</td><td class="td-fei"></td><td class="td-thick"><span class="badge badge-special">geschlossen</span></td><td></td></tr>
+<tr class="row-wed"><td></td><td class="wt">Mi</td><td class="dat">18.11.</td><td class="td-fei"></td><td class="td-thick"><span class="badge" style="background:#D4889A">Yvonne</span></td><td><span class="badge" style="background:#A99BC8">Bawa</span></td></tr>
+<tr class="row-thu"><td></td><td class="wt">Do</td><td class="dat">19.11.</td><td class="td-fei"></td><td class="td-thick"><span class="badge" style="background:#E0A882">Sabrina</span></td><td><span class="badge" style="background:#8EC4A4">Anita</span></td></tr>
+<tr class="row-fri"><td></td><td class="wt">Fr</td><td class="dat">20.11.</td><td class="td-fei"></td><td class="td-thick"><span class="badge" style="background:#A99BC8">Bawa</span></td><td><span class="badge" style="background:#D4728A">Sabine</span></td></tr>
+<tr class="row-sat"><td></td><td class="wt">Sa</td><td class="dat">21.11.</td><td class="td-fei"></td><td class="td-thick"><span class="badge" style="background:#8EC0D4">Anja</span></td><td><span class="badge" style="background:#D4728A">Sabine</span></td></tr>
+<tr class="row-closed week-end"><td></td><td class="wt">So</td><td class="dat">22.11.</td><td class="td-fei"></td><td class="td-thick"><span class="badge badge-special">geschlossen</span></td><td></td></tr>
+<tr class="row-closed"><td class="kw">48</td><td class="wt">Mo</td><td class="dat">23.11.</td><td class="td-fei"></td><td class="td-thick"><span class="badge badge-special">geschlossen</span></td><td></td></tr>
+<tr class="row-closed"><td></td><td class="wt">Di</td><td class="dat">24.11.</td><td class="td-fei"></td><td class="td-thick"><span class="badge badge-special">geschlossen</span></td><td></td></tr>
+<tr class="row-wed"><td></td><td class="wt">Mi</td><td class="dat">25.11.</td><td class="td-fei"></td><td class="td-thick"><span class="badge" style="background:#D4889A">Yvonne</span></td><td><span class="badge" style="background:#A99BC8">Bawa</span></td></tr>
+<tr class="row-thu"><td></td><td class="wt">Do</td><td class="dat">26.11.</td><td class="td-fei"></td><td class="td-thick"><span class="badge" style="background:#E0A882">Sabrina</span></td><td><span class="badge" style="background:#8EC4A4">Anita</span></td></tr>
+<tr class="row-fri"><td></td><td class="wt">Fr</td><td class="dat">27.11.</td><td class="td-fei"></td><td class="td-thick"><span class="badge" style="background:#D4728A">Sabine</span></td><td><span class="badge" style="background:#BC85AA">Sandra</span></td></tr>
+<tr class="row-sat"><td></td><td class="wt">Sa</td><td class="dat">28.11.</td><td class="td-fei"></td><td class="td-thick"><span class="badge" style="background:#C9AA6A">Martha</span></td><td><span class="badge" style="background:#E0A882">Sabrina</span></td></tr>
+<tr class="row-closed week-end"><td></td><td class="wt">So</td><td class="dat">29.11.</td><td class="td-fei"></td><td class="td-thick"><span class="badge badge-special">geschlossen</span></td><td></td></tr>
+<tr class="row-closed"><td class="kw">49</td><td class="wt">Mo</td><td class="dat">30.11.</td><td class="td-fei"></td><td class="td-thick"><span class="badge badge-special">geschlossen</span></td><td></td></tr>
+</tbody></table>
+</div>
+<div class="month-pane" id="pane-Dezember" style="display:none"><div class="month-title">Dezember 2026</div><table><thead><tr><th>KW</th><th>Tag</th><th>Dat.</th><th class="th-fei">Feiertag</th><th class="th-thick">17:00</th><th>18:00</th></tr></thead><tbody>
+<tr class="row-closed"><td class="kw">49</td><td class="wt">Di</td><td class="dat">01.12.</td><td class="td-fei"></td><td class="td-thick"><span class="badge badge-special">geschlossen</span></td><td></td></tr>
+<tr class="row-wed"><td></td><td class="wt">Mi</td><td class="dat">02.12.</td><td class="td-fei"></td><td class="td-thick"><span class="badge" style="background:#D4889A">Yvonne</span></td><td><span class="badge" style="background:#A99BC8">Bawa</span></td></tr>
+<tr class="row-thu"><td></td><td class="wt">Do</td><td class="dat">03.12.</td><td class="td-fei"></td><td class="td-thick"><span class="badge" style="background:#E0A882">Sabrina</span></td><td><span class="badge" style="background:#8EC4A4">Anita</span></td></tr>
+<tr class="row-fri"><td></td><td class="wt">Fr</td><td class="dat">04.12.</td><td class="td-fei"></td><td class="td-thick"><span class="badge" style="background:#D4728A">Sabine</span></td><td><span class="badge" style="background:#8EC0D4">Anja</span></td></tr>
+<tr class="row-sat"><td></td><td class="wt">Sa</td><td class="dat">05.12.</td><td class="td-fei"></td><td class="td-thick"><span class="badge" style="background:#BC85AA">Sandra</span></td><td><span class="badge" style="background:#D4728A">Sabine</span></td></tr>
+<tr class="row-closed week-end"><td></td><td class="wt">So</td><td class="dat">06.12.</td><td class="td-fei"></td><td class="td-thick"><span class="badge badge-special">geschlossen</span></td><td></td></tr>
+<tr class="row-closed"><td class="kw">50</td><td class="wt">Mo</td><td class="dat">07.12.</td><td class="td-fei"></td><td class="td-thick"><span class="badge badge-special">geschlossen</span></td><td></td></tr>
+<tr class="row-closed"><td></td><td class="wt">Di</td><td class="dat">08.12.</td><td class="td-fei"><span class="fei-label" title="Mariä Empfängnis">Mariä Empfä…</span></td><td class="td-thick"><span class="badge badge-special">geschlossen</span></td><td></td></tr>
+<tr class="row-wed"><td></td><td class="wt">Mi</td><td class="dat">09.12.</td><td class="td-fei"></td><td class="td-thick"><span class="badge" style="background:#D4889A">Yvonne</span></td><td><span class="badge" style="background:#A99BC8">Bawa</span></td></tr>
+<tr class="row-thu"><td></td><td class="wt">Do</td><td class="dat">10.12.</td><td class="td-fei"></td><td class="td-thick"><span class="badge" style="background:#E0A882">Sabrina</span></td><td><span class="badge" style="background:#8EC4A4">Anita</span></td></tr>
+<tr class="row-fri"><td></td><td class="wt">Fr</td><td class="dat">11.12.</td><td class="td-fei"></td><td class="td-thick"><span class="badge" style="background:#D4728A">Sabine</span></td><td><span class="badge" style="background:#C9AA6A">Martha</span></td></tr>
+<tr class="row-sat"><td></td><td class="wt">Sa</td><td class="dat">12.12.</td><td class="td-fei"></td><td class="td-thick"><span class="badge" style="background:#C9AA6A">Martha</span></td><td><span class="badge" style="background:#D4728A">Sabine</span></td></tr>
+<tr class="row-closed week-end"><td></td><td class="wt">So</td><td class="dat">13.12.</td><td class="td-fei"></td><td class="td-thick"><span class="badge badge-special">geschlossen</span></td><td></td></tr>
+<tr class="row-closed"><td class="kw">51</td><td class="wt">Mo</td><td class="dat">14.12.</td><td class="td-fei"></td><td class="td-thick"><span class="badge badge-special">geschlossen</span></td><td></td></tr>
+<tr class="row-closed"><td></td><td class="wt">Di</td><td class="dat">15.12.</td><td class="td-fei"></td><td class="td-thick"><span class="badge badge-special">geschlossen</span></td><td></td></tr>
+<tr class="row-wed"><td></td><td class="wt">Mi</td><td class="dat">16.12.</td><td class="td-fei"></td><td class="td-thick"><span class="badge" style="background:#D4889A">Yvonne</span></td><td><span class="badge" style="background:#A99BC8">Bawa</span></td></tr>
+<tr class="row-thu"><td></td><td class="wt">Do</td><td class="dat">17.12.</td><td class="td-fei"></td><td class="td-thick"><span class="badge" style="background:#E0A882">Sabrina</span></td><td><span class="badge" style="background:#8EC4A4">Anita</span></td></tr>
+<tr class="row-fri"><td></td><td class="wt">Fr</td><td class="dat">18.12.</td><td class="td-fei"></td><td class="td-thick"><span class="badge" style="background:#BC85AA">Sandra</span></td><td><span class="badge" style="background:#D4728A">Sabine</span></td></tr>
+<tr class="row-sat"><td></td><td class="wt">Sa</td><td class="dat">19.12.</td><td class="td-fei"></td><td class="td-thick"><span class="badge" style="background:#D4728A">Sabine</span></td><td><span class="badge" style="background:#8EC0D4">Anja</span></td></tr>
+<tr class="row-closed week-end"><td></td><td class="wt">So</td><td class="dat">20.12.</td><td class="td-fei"></td><td class="td-thick"><span class="badge badge-special">geschlossen</span></td><td></td></tr>
+<tr class="row-closed"><td class="kw">52</td><td class="wt">Mo</td><td class="dat">21.12.</td><td class="td-fei"></td><td class="td-thick"><span class="badge badge-special">geschlossen</span></td><td></td></tr>
+<tr class="row-closed"><td></td><td class="wt">Di</td><td class="dat">22.12.</td><td class="td-fei"></td><td class="td-thick"><span class="badge badge-special">geschlossen</span></td><td></td></tr>
+<tr class="row-closed"><td></td><td class="wt">Mi</td><td class="dat">23.12.</td><td class="td-fei"></td><td class="td-thick"><span class="badge badge-special">geschlossen</span></td><td></td></tr>
+<tr class="row-closed"><td></td><td class="wt">Do</td><td class="dat">24.12.</td><td class="td-fei"><span class="fei-label" title="Heiligabend">Heiligabend</span></td><td class="td-thick"><span class="badge badge-special">geschlossen</span></td><td></td></tr>
+<tr class="row-closed"><td></td><td class="wt">Fr</td><td class="dat">25.12.</td><td class="td-fei"><span class="fei-label" title="Christtag">Christtag</span></td><td class="td-thick"><span class="badge badge-special">geschlossen</span></td><td></td></tr>
+<tr class="row-closed"><td></td><td class="wt">Sa</td><td class="dat">26.12.</td><td class="td-fei"><span class="fei-label" title="Stefanitag">Stefanitag</span></td><td class="td-thick"><span class="badge badge-special">geschlossen</span></td><td></td></tr>
+<tr class="row-closed week-end"><td></td><td class="wt">So</td><td class="dat">27.12.</td><td class="td-fei"></td><td class="td-thick"><span class="badge badge-special">geschlossen</span></td><td></td></tr>
+<tr class="row-closed"><td class="kw">53</td><td class="wt">Mo</td><td class="dat">28.12.</td><td class="td-fei"></td><td class="td-thick"><span class="badge badge-special">geschlossen</span></td><td></td></tr>
+<tr class="row-closed"><td></td><td class="wt">Di</td><td class="dat">29.12.</td><td class="td-fei"></td><td class="td-thick"><span class="badge badge-special">geschlossen</span></td><td></td></tr>
+<tr class="row-closed"><td></td><td class="wt">Mi</td><td class="dat">30.12.</td><td class="td-fei"></td><td class="td-thick"><span class="badge badge-special">geschlossen</span></td><td></td></tr>
+<tr class="row-closed"><td></td><td class="wt">Do</td><td class="dat">31.12.</td><td class="td-fei"><span class="fei-label" title="Silvester">Silvester</span></td><td class="td-thick"><span class="badge badge-special">geschlossen</span></td><td></td></tr>
+</tbody></table>
+</div>
+</div>
+<div class="legend-section">
+  <h3>Tagesfarben</h3>
+  <div class="legend"><div class="leg-item"><div class="leg-box" style="background:#F0E6F0"></div>Mittwoch</div><div class="leg-item"><div class="leg-box" style="background:#F5E6F0"></div>Donnerstag</div><div class="leg-item"><div class="leg-box" style="background:#FDF5E0"></div>Freitag</div><div class="leg-item"><div class="leg-box" style="background:#FDE8DC"></div>Samstag</div><div class="leg-item"><div class="leg-box" style="background:#F5EDED"></div>Sonntag</div><div class="leg-item"><div class="leg-box" style="background:#EDEDED"></div>Geschlossen</div><div class="leg-item"><div class="leg-box" style="background:#D8EAF5"></div>Urlaub</div><div class="leg-item"><div class="red-leg"></div>Rattenberger Festspiele</div></div>
+</div>
+<div class="legend-section">
+  <h3>Mitarbeiterinnen</h3>
+  <div class="legend"><div class="leg-item"><div class="leg-box" style="background:#D4889A;border-radius:8px"></div>Yvonne</div><div class="leg-item"><div class="leg-box" style="background:#A99BC8;border-radius:8px"></div>Bawa</div><div class="leg-item"><div class="leg-box" style="background:#E0A882;border-radius:8px"></div>Sabrina</div><div class="leg-item"><div class="leg-box" style="background:#8EC4A4;border-radius:8px"></div>Anita</div><div class="leg-item"><div class="leg-box" style="background:#C9AA6A;border-radius:8px"></div>Martha</div><div class="leg-item"><div class="leg-box" style="background:#BC85AA;border-radius:8px"></div>Sandra</div><div class="leg-item"><div class="leg-box" style="background:#D4728A;border-radius:8px"></div>Sabine</div><div class="leg-item"><div class="leg-box" style="background:#8EC0D4;border-radius:8px"></div>Anja</div><div class="leg-item"><div class="leg-box" style="background:#96BC86;border-radius:8px"></div>Jasmin</div><div class="leg-item"><div class="leg-box" style="background:#D496B8;border-radius:8px"></div>Samara</div></div>
+</div>
+<footer>Restaurant Dopolavoro &nbsp;·&nbsp; Stand: Juli 2026</footer>
+<script>
+const months = ["Juli", "August", "September", "Oktober", "November", "Dezember"];
+function showMonth(name) {
+  months.forEach(m => {
+    document.getElementById('pane-'+m).style.display='none';
+    document.getElementById('btn-'+m).classList.remove('active');
+  });
+  document.getElementById('pane-'+name).style.display='block';
+  document.getElementById('btn-'+name).classList.add('active');
+}
+const mm = {'Juli':6,'August':7,'September':8,'Oktober':9,'November':10,'Dezember':11};
+const cm = new Date().getMonth();
+let show = months[0];
+for (const m of months) { if (mm[m] >= cm) { show = m; break; } }
+showMonth(show);
+</script>
+</body>
+</html>
